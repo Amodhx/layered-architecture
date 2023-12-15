@@ -122,7 +122,7 @@ public class ManageCustomersFormController {
     }
 
 
-    public void btnSave_OnAction(ActionEvent actionEvent) {
+    public void btnSave_OnAction(ActionEvent actionEvent) throws SQLException {
         String id = txtCustomerId.getText();
         String name = txtCustomerName.getText();
         String address = txtCustomerAddress.getText();
@@ -143,16 +143,13 @@ public class ManageCustomersFormController {
                 if (existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, id + " already exists").show();
                 }
-                Connection connection = DBConnection.getDbConnection().getConnection();
-                PreparedStatement pstm = connection.prepareStatement("INSERT INTO Customer (id,name, address) VALUES (?,?,?)");
-                pstm.setString(1, id);
-                pstm.setString(2, name);
-                pstm.setString(3, address);
-                pstm.executeUpdate();
-
-                tblCustomers.getItems().add(new CustomerTM(id, name, address));
-            } catch (SQLException e) {
-                new Alert(Alert.AlertType.ERROR, "Failed to save the customer " + e.getMessage()).show();
+                CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+                boolean b = customerDAO.saveCustomer(new CustomerDTO(id, name, address));
+                if (b){
+                    tblCustomers.getItems().add(new CustomerTM(id, name, address));
+                }else {
+                    new Alert(Alert.AlertType.ERROR, "Failed to save the customer " ).show();
+                }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
