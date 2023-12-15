@@ -7,6 +7,23 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class CustomerDAOImpl {
+    public boolean deleteCustomer(String id) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Customer WHERE id=?");
+        preparedStatement.setString(1,id);
+        int executed = preparedStatement.executeUpdate();
+        return executed>0;
+    }
+    public boolean updateCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Customer SET name=?, address=? WHERE id=?");
+        preparedStatement.setString(1,customerDTO.getName());
+        preparedStatement.setString(2,customerDTO.getAddress());
+        preparedStatement.setString(3,customerDTO.getId());
+
+        int executed = preparedStatement.executeUpdate();
+        return executed > 0;
+    }
     public boolean saveCustomer(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT  into customer values (?,?,?)");
