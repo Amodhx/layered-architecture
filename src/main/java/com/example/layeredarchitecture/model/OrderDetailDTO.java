@@ -10,6 +10,7 @@ public class OrderDetailDTO implements Serializable {
     private int qty;
     private BigDecimal unitPrice;
 
+
     public OrderDetailDTO() {
     }
 
